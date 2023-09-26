@@ -8,8 +8,8 @@ def charts(request):
     co2 = CO2.objects.all()
 
     fig = px.line(
-        x = [co2.date for c in co2],
-        y = [co2.average for c in co2]
+        x = [c.date for c in co2],
+        y = [c.average for c in co2]
     )
     
     chart = fig.to_html()
