@@ -1,18 +1,22 @@
 from django.shortcuts import render
-from core.models import CO2 
+from core.models import CO2
 import plotly.express as px
+from .forms import DateForm
 
 
 # Create your views here.
 def charts(request):
-    co2 = CO2.objects.all()
+	co2 = CO2.objects.all()
+	form = DateForm()
 
-    fig = px.line(
-        x = [c.date for c in co2],
-        y = [c.average for c in co2]
-    )
-    
-    chart = fig.to_html()
+	fig = px.line(
+		x=[c.date for c in co2],
+		y=[c.average for c in co2],
+		title="CO2 PPM",
+		labels={'x': 'Date', 'y': 'CO2 PPM'},
+	)
 
-    context = {'chart': chart}
-    return render(request, 'core/charts.html', context)
+	chart = fig.to_html()
+
+	context = {'chart': chart, 'form': form}
+	return render(request, 'core/charts.html', context)
