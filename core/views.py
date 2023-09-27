@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from core.models import CO2
 import plotly.express as px
+from django.db.models import Avg
 from .forms import DateForm
 
 
@@ -26,3 +27,10 @@ def charts(request):
 
 	context = {'chart': chart, 'form': DateForm()}
 	return render(request, 'core/charts.html', context)
+
+
+def yearly_avg_co2(request):
+	avg = CO2.objects.values('date__year').annotate(avg=Avg('average'))
+
+	context = {'avg': avg}
+	
