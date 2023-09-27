@@ -32,11 +32,17 @@ def charts(request):
 def yearly_avg_co2(request):
 	avg = CO2.objects.values('date__year').annotate(avg=Avg('average'))
 
-	context = {'avg': avg}
 	x = avg.values_list('date__year', flat=True)
 	y = avg.values_list('avg', flat=True)
-	fig = px.bar(avg, x=x, y=y) 
-	fig.update_layout(title_text="Average CO2 concetreation per year")
+
+	text = [f'{avg:.1f}' for avg in y]
+
+	fig = px.bar(avg, x=x, y=y, text=text)
+	fig.update_layout(
+		title_text="Average CO2 concetreation per year",
+		yaxis_range=[0, 500]
+	)
+	fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
 
 	chart = fig.to_html()
 
